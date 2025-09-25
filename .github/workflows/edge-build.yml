@@ -49,16 +49,15 @@ jobs:
           echo "ref=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
           git config --global --add safe.directory /__w/Carbon/Carbon
 
-      - name: Rust Setup
+      - name: Rust Setup (P1)
+        uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          target: x86_64-pc-windows-gnu
+          components: rust-std
+
+      - name: Rust Setup (P2)
         shell: bash
         run: |
-          apt update
-          apt install -y mingw-w64
-
-          rustup install stable
-          rustup default stable
-          rustup target add x86_64-pc-windows-gnu
-          rustup component add rust-std --target x86_64-pc-windows-gnu
           rustup show
           rustc --print sysroot
 
