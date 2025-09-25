@@ -66,7 +66,14 @@ jobs:
       - name: Setup .NET
         shell: bash
         run: |
-          curl -fsSL https://dot.net/v1/dotnet-install.sh | bash -s -- --version 9.0.203
+          curl -fsSL https://dot.net/v1/dotnet-install.sh | bash -s -- --version 9.0.203 --install-dir "$HOME/.dotnet"
+          echo "$HOME/.dotnet" >> "$GITHUB_PATH"
+
+      - name: Cache .NET
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.NUGET_PACKAGES }}
+          key: nuget-v0-${{ hashFiles('**/*.csproj') }}
 
       - name: Carbon.Native Toolchain
         uses: dtolnay/rust-toolchain@stable
