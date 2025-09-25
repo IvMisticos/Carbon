@@ -53,6 +53,8 @@ jobs:
         uses: awalsh128/cache-apt-pkgs-action@v1.5.3
         with:
           packages: mingw-w64
+          version: 1.0
+          debug: true
 
       - name: MinGW Confirmation
         shell: bash
