@@ -18,6 +18,8 @@ jobs:
     runs-on: ubuntu-latest
     container: rust:bullseye
     continue-on-error: false
+    env:
+      DEBIAN_FRONTEND: noninteractive
 
     outputs:
       date: ${{ steps.step1.outputs.date }}
