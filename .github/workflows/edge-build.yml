@@ -49,12 +49,14 @@ jobs:
           echo "ref=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
           git config --global --add safe.directory /__w/Carbon/Carbon
 
-      - name: MinGW Setup
+      - name: MinGW Install
+        uses: awalsh128/cache-apt-pkgs-action@v1.5.3
+        with:
+          packages: mingw-w64
+
+      - name: MinGW Confirmation
         shell: bash
         run: |
-          apt update
-          apt install -y mingw-w64
-
           which x86_64-w64-mingw32-dlltool || echo "dlltool not found"
           x86_64-w64-mingw32-dlltool --version
 
