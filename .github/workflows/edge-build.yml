@@ -49,24 +49,11 @@ jobs:
           echo "ref=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
           git config --global --add safe.directory /__w/Carbon/Carbon
 
-      - name: Rust Setup (P1)
-        uses: actions-rust-lang/setup-rust-toolchain@v1
-        with:
-          target: x86_64-pc-windows-gnu
-          components: rust-std
-          toolchain: stable
-          cache-on-failure: false
-          matcher: false
-          override: true
-
-      - name: Rust Setup (P2)
+      - name: MinGW Setup
         shell: bash
         run: |
           apt update
           apt install -y mingw-w64
-
-          rustup show
-          rustc --print sysroot
 
           which x86_64-w64-mingw32-dlltool || echo "dlltool not found"
           x86_64-w64-mingw32-dlltool --version
@@ -83,6 +70,16 @@ jobs:
 
       - name: Carbon.Native Toolchain
         uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
+          targets: x86_64-unknown-linux-gnu,x86_64-pc-windows-gnu
+          components: rust-std
+
+      - name: Cargo Cache (Linux)
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: Carbon.Core/Carbon.Native
+          key: x86_64-unknown-linux-gnu
 
       - name: Carbon.Native Build (Linux)
         uses: ClementTsang/cargo-action@v0.0.3
@@ -90,6 +87,12 @@ jobs:
           command: build
           args: -r --target x86_64-unknown-linux-gnu
           directory: Carbon.Core/Carbon.Native
+
+      - name: Cargo Cache (Linux)
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: Carbon.Core/Carbon.Native
+          key: x86_64-pc-windows-gnu
 
       - name: Carbon.Native Build (Windows)
         uses: ClementTsang/cargo-action@v0.0.3
