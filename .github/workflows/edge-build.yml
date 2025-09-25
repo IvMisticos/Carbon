@@ -75,11 +75,10 @@ jobs:
           targets: x86_64-unknown-linux-gnu,x86_64-pc-windows-gnu
           components: rust-std
 
-      - name: Cargo Cache (Linux)
+      - name: Cargo Cache
         uses: Swatinem/rust-cache@v2
         with:
           workspaces: Carbon.Core/Carbon.Native
-          key: x86_64-unknown-linux-gnu
 
       - name: Carbon.Native Build (Linux)
         uses: ClementTsang/cargo-action@v0.0.3
@@ -87,12 +86,6 @@ jobs:
           command: build
           args: -r --target x86_64-unknown-linux-gnu
           directory: Carbon.Core/Carbon.Native
-
-      - name: Cargo Cache (Linux)
-        uses: Swatinem/rust-cache@v2
-        with:
-          workspaces: Carbon.Core/Carbon.Native
-          key: x86_64-pc-windows-gnu
 
       - name: Carbon.Native Build (Windows)
         uses: ClementTsang/cargo-action@v0.0.3
