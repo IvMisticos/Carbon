@@ -16,7 +16,7 @@ jobs:
   build:
     name: Edge Build
     runs-on: ubuntu-latest
-    container: rust:bullseye
+    container: rust:trixie
     continue-on-error: false
     env:
       DEBIAN_FRONTEND: noninteractive
@@ -51,33 +51,20 @@ jobs:
           echo "ref=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
           git config --global --add safe.directory /__w/Carbon/Carbon
 
-      - name: apt-fast Setup
-        shell: bash
-        run: |
-          mkdir -p /etc/apt/keyrings
-          curl -fsSL "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0xBC5934FD3DEBD4DAEA544F791E2824A7F22B44BD" | gpg --dearmor -o /etc/apt/keyrings/apt-fast.gpg
-          echo "deb [signed-by=/etc/apt/keyrings/apt-fast.gpg] http://ppa.launchpad.net/apt-fast/stable/ubuntu focal main" > /etc/apt/sources.list.d/apt-fast.list
-          apt update
-          apt install -y apt-fast
-
       - name: MinGW Setup
         shell: bash
         run: |
           apt update
-          apt-fast install -y mingw-w64
+          apt install -y mingw-w64
 
           which x86_64-w64-mingw32-dlltool || echo "dlltool not found"
           x86_64-w64-mingw32-dlltool --version
 
-      - name: Setup .NET 8 SDK
-        uses: actions/setup-dotnet@v2
-        with:
-          dotnet-version: 8.0.406
-
       - name: Setup .NET 9 SDK
-        uses: actions/setup-dotnet@v2
+        uses: actions/setup-dotnet@v5
         with:
-          dotnet-version: 9.0.203
+          dotnet-version: 9
+          cache: true
 
       - name: Carbon.Native Toolchain
         uses: dtolnay/rust-toolchain@stable
