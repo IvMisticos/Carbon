@@ -20,6 +20,9 @@ jobs:
     continue-on-error: false
     env:
       DEBIAN_FRONTEND: noninteractive
+      DOTNET_CLI_TELEMETRY_OPTOUT: true
+      DOTNET_NOLOGO: true
+      NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
 
     outputs:
       date: ${{ steps.step1.outputs.date }}
@@ -60,11 +63,10 @@ jobs:
           which x86_64-w64-mingw32-dlltool || echo "dlltool not found"
           x86_64-w64-mingw32-dlltool --version
 
-      - name: Setup .NET 9 SDK
-        uses: actions/setup-dotnet@v5
-        with:
-          dotnet-version: 9
-          cache: true
+      - name: Setup .NET
+        shell: bash
+        run: |
+          curl -fsSL https://dot.net/v1/dotnet-install.sh | bash -s -- --version 9.0.203
 
       - name: Carbon.Native Toolchain
         uses: dtolnay/rust-toolchain@stable
