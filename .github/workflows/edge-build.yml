@@ -54,6 +54,10 @@ jobs:
         with:
           target: x86_64-pc-windows-gnu
           components: rust-std
+          toolchain: stable
+          cache-on-failure: false
+          matcher: false
+          override: true
 
       - name: Rust Setup (P2)
         shell: bash
